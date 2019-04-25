@@ -281,10 +281,10 @@ apt-get install phpmyadmin -y
 cd /var/www/osu.ppy.sh
 ln -s /usr/share/phpmyadmin phpmyadmin
 echo "PhpMyAdmin setup is done!"
-cd /root/
+cd $MasterDir
 
 echo "Changing folder and files permissions"
-chmod -R 777 ripple/
+chmod -R 777 ../ripple
 
 END=$(date +%s)
 DIFF=$(( $END - $START ))
