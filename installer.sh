@@ -182,7 +182,7 @@ cd $MasterDir
 cd nginx
 wget -O nginx.conf https://pastebin.com/raw/B4hWMmZn
 sed -i 's#DOMAIN#'$domain'#g; s#DIRECTORY#'$MasterDir'#g; s#6969#'$hanayo_port'#g' nginx.conf
-wget -O old-frontend.conf https://pastebin.com/raw/bMXE2m6n
+wget -O old-frontend.conf https://pastebin.com/raw/eEdH3d6N
 sed -i 's#DOMAIN#'$domain'#g; s#DIRECTORY#'$MasterDir'#g; s#6969#'$hanayo_port'#g' old-frontend.conf
 echo "Downloading certificate..."
 wget -O cert.pem https://raw.githubusercontent.com/osuthailand/ainu-certificate/master/cert.pem
@@ -204,7 +204,7 @@ echo "Setting up database..."
 #mysql -uroot -p -e 'USE mysql; UPDATE `user` SET `Host`="%" WHERE `User`="root" AND `Host`="localhost"; DELETE FROM `user` WHERE `Host` != "%" AND `User`="root"; FLUSH PRIVILEGES;'
 #service mysql restart
 # Download custom php file for installation (I could also just run a bunch of sql commands etc in shell but its easier this way)
-wget -O ripple.sql https://cdn.discordapp.com/attachments/547063467455021066/551659135997837322/ripple_database.sql
+wget -O ripple.sql https://pastebin.com/raw/gNU1cYTX
 mysql -u "$mysql_usr" -p"$mysql_psw" -e 'CREATE DATABASE ripple;'
 mysql -u "$mysql_usr" -p"$mysql_psw" ripple < ripple.sql
 echo "Database setup is done!"
@@ -272,6 +272,11 @@ cd $MasterDir
 echo "Backend server is done!"
 
 echo "Setting up PhpMyAdmin..."
+debconf-set-selections <<< 'phpmyadmin phpmyadmin/dbconfig-install boolean true'
+debconf-set-selections <<< 'phpmyadmin phpmyadmin/app-password-confirm password $mysql_psw'
+debconf-set-selections <<< 'phpmyadmin phpmyadmin/mysql/admin-pass password $mysql_psw'
+debconf-set-selections <<< 'phpmyadmin phpmyadmin/mysql/app-pass password $mysql_psw'
+debconf-set-selections <<< 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect none'
 apt-get install phpmyadmin -y
 cd /var/www/osu.ppy.sh
 ln -s /usr/share/phpmyadmin phpmyadmin
